@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Elevo — Totem de Recarga Inteligente</title>
+<link rel="stylesheet" href="style.css"></head><body>
+<header><div class="logo">⚡ Elevo</div>
+<nav><button id="n1" class="on" onclick="view(1)">Totem</button><button id="n2" onclick="view(2)">Gestão de potência</button><button id="n3" onclick="view(3)">Sessões</button></nav>
+<button class="ghost" onclick="conta()">👤 Minha conta</button><button class="ghost" onclick="reiniciar()">↺ Reiniciar demo</button></header>
+<main>
+<div id="totem"><div class="steps" id="steps"></div>
+
+<section id="s1" class="scr on">
+<div class="card"><span class="pill ok">● Disponível</span><h1>Carregador #001</h1>
+<p>Recarga inteligente com preço transparente e potência otimizada para você.</p>
+<div class="kpis"><div class="kpi"><b>22 kW</b><small>Potência máxima disponível</small></div><div class="kpi"><b>R$ 1,17</b><small>Preço por kWh (tarifa base)</small></div><div class="kpi"><b>Autoatendimento</b><small>Pix, cartão ou carteira</small></div></div></div>
+<div class="row"><button class="btn big" onclick="go(2)">⚡ Iniciar recarga</button><button class="btn sec big" onclick="$('rv').classList.toggle('hide')">🎟️ Tenho uma reserva</button></div>
+<div id="rv" class="card hide"><label>Código da reserva</label><input id="cod" value="ELV-4821"><button class="btn" onclick="reserva()">Validar reserva</button></div>
+</section>
+
+<section id="s2" class="scr"><h2>Como deseja se identificar?</h2>
+<div class="grid">
+<button class="opt" onclick="login()">👤<b>Entrar na conta</b>E-mail e senha</button>
+<button class="opt" onclick="qr()">▦<b>QR Code</b>Aproxime o código do leitor</button>
+<button class="opt" onclick="S.user='Visitante';go(3)">🚗<b>Continuar como visitante</b>Sem cadastro</button></div>
+<div class="row"><button class="btn sec" onclick="go(1)">← Voltar</button></div></section>
+
+<section id="s3" class="scr"><h2>Configure sua recarga</h2>
+<div class="card" id="car"></div>
+<div class="grid"><div class="card">
+<label>Energia desejada <b id="oE"></b></label><input type="range" id="iE" min="5" max="60" step="1" value="20" oninput="upd()">
+<label>Tempo disponível <b id="oT"></b></label><input type="range" id="iT" min="15" max="480" step="15" value="90" oninput="upd()">
+<label>Orçamento máximo <b id="oB"></b></label><input type="range" id="iB" min="10" max="200" step="5" value="50" oninput="upd()">
+<label>Bateria atual <b id="oS"></b></label><input type="range" id="iS" min="5" max="90" step="1" value="30" oninput="upd()">
+<label>Preferência de velocidade</label>
+<div class="chips" id="pref"><button class="chip" data-v="lenta" onclick="pref('lenta')">Lenta</button><button class="chip" data-v="media" onclick="pref('media')">Média</button><button class="chip" data-v="rapida" onclick="pref('rapida')">Rápida</button></div></div>
+<div class="card" id="rec"></div></div>
+<div class="row"><button class="btn sec" onclick="go(2)">← Voltar</button><button class="btn" onclick="go(4)">Continuar →</button></div></section>
+
+<section id="s4" class="scr"><h2>Resumo da recarga</h2>
+<div class="grid"><div class="card" id="sum"></div><div><div id="estr" style="display:grid;gap:10px"></div></div></div>
+<div class="row"><button class="btn sec" onclick="go(3)">← Voltar</button><button class="btn big" onclick="go(5)">Confirmar e continuar</button></div></section>
+
+<section id="s5" class="scr"><h2>Pagamento <span class="pill">simulado</span></h2>
+<div class="card"><div class="kpi"><b id="pv"></b><small>Valor estimado (pré-autorização simulada, o valor final depende do consumo)</small></div></div>
+<div class="grid" id="pmet"></div>
+<div class="row"><button class="btn sec" onclick="go(4)">← Voltar</button><button class="btn big" id="pay" onclick="pagar()">Pagar (simulado)</button></div>
+<div id="ok5" class="card hide"><h2 class="ok">✔ Pagamento aprovado</h2><p>Nenhuma cobrança real foi feita. Conecte o veículo e inicie a sessão.</p><button class="btn big" onclick="iniciar()">▶ Iniciar sessão</button></div></section>
+
+<section id="s6" class="scr"><h2>Carregamento em andamento</h2>
+<div class="card split"><div>
+<svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="none" stroke="var(--line)" stroke-width="10"/><circle id="rg" cx="60" cy="60" r="54" fill="none" stroke="var(--a)" stroke-width="10" stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="339.3" transform="rotate(-90 60 60)"/><text id="pc" x="60" y="68" text-anchor="middle" font-size="24" font-weight="700" fill="var(--t)">0%</text></svg></div>
+<div><span class="pill" id="st6"></span><div class="kpis" id="k6" style="margin-top:12px"></div><small class="n" id="cn6"></small></div></div>
+<div class="row"><button class="btn sec" id="bp" onclick="S.s.pausa=true;r6()">⏸ Pausar carregamento</button><button class="btn sec" id="br" onclick="S.s.pausa=false;r6()">▶ Retomar carregamento</button><button class="btn sec" onclick="alterar()">🔀 Alterar estratégia</button><button class="btn" onclick="fim()">⏹ Encerrar carregamento</button></div>
+<button class="ghost" id="ac" onclick="S.s.esc=S.s.esc==60?300:60;r6()"></button></section>
+
+<section id="s7" class="scr"><h2 class="ok">✔ Recarga concluída</h2>
+<div class="card"><div class="kpis" id="f7"></div></div>
+<div class="card hide" id="rc"></div>
+<div class="row"><button class="btn sec" onclick="$('rc').classList.toggle('hide')">🧾 Ver recibo</button><button class="btn" onclick="nova()">⚡ Nova recarga</button><button class="btn sec" onclick="reiniciar()">🏠 Voltar ao início</button></div></section>
+</div>
+
+<div id="sessoes" class="hide"><h2>Sessões de recarga <span class="pill">backend Python</span></h2>
+<div class="card"><div class="chips" style="margin:0 0 10px"><select id="so" onchange="ses()"><option value="data">Data</option><option value="energia">Energia</option><option value="custo">Custo</option><option value="duracao_min">Duração</option></select><select id="sd" onchange="ses()"><option value="asc">Crescente</option><option value="desc">Decrescente</option></select><button class="btn sec" onclick="demo()">＋ 10 sessões de demonstração</button><button class="btn sec" onclick="rel()">🧾 Relatório</button></div>
+<div class="chips" style="margin:0"><input id="sq" placeholder="Nº do recibo" style="max-width:240px;margin:0"><button class="btn" onclick="busca()">Buscar</button><button class="btn sec" onclick="$('sq').value='';ses()">Limpar</button></div><p id="sinfo"></p></div>
+<div class="kpis" id="sk"></div>
+<div class="card scroll" style="margin-top:16px"><table><thead><tr><th>Recibo</th><th>Data</th><th>Carro</th><th>Energia</th><th>Duração</th><th>Estratégia</th><th>Custo</th></tr></thead><tbody id="st"></tbody></table></div></div>
+<div id="gestao" class="hide"><h2>Gerenciamento inteligente da demanda de potência</h2>
+<div class="kpis" id="gk"></div>
+<div class="card" style="margin-top:16px"><label>Potência total disponível <b id="gPv"></b></label>
+<input type="range" id="gP" min="6" max="22" value="22" oninput="setP(+this.value)">
+<div class="row"><button class="btn sec" onclick="setP(11)">📉 Simular queda para 11 kW</button><button class="btn sec" onclick="setP(22)">Restaurar 22 kW</button></div>
+<small class="n">Toque na prioridade de um veículo para alterá-la. A soma das potências nunca ultrapassa o limite.</small>
+<div class="bar big2" id="gb" style="margin-top:12px"></div></div>
+<div class="card scroll"><table><thead><tr><th>Veículo</th><th>Prioridade</th><th>Saída em</th><th>Energia restante</th><th>Potência</th><th>kW</th><th>Tempo restante</th><th>Situação</th></tr></thead><tbody id="gr"></tbody></table></div>
+<div class="card"><b>Gestão x divisão igual:</b> <span id="gc"></span></div>
+<div class="grid">
+<div class="card"><h2>🏢 Empresas</h2>Mais veículos atendidos na mesma infraestrutura, sem ampliar a potência contratada.</div>
+<div class="card"><h2>📊 Gestores</h2>Visibilidade de demanda, consumo, sessões e receita em tempo real.</div>
+<div class="card"><h2>🚗 Usuários</h2>Preço transparente, previsibilidade de custo e tempo, e opção de recarga otimizada.</div></div></div>
+<small class="n">Protótipo com dados simulados. Lógica em Motor, dados em Repo, prontos para Firebase e medição de energia.</small>
+</main>
+<div id="m" class="hide"></div>
+<script src="energia.js"></script>
+<script src="app.js"></script></body></html>

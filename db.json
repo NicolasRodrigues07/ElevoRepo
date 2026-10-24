@@ -1,0 +1,34 @@
+{
+  "usuarios": [
+    {
+      "id": "070190a1",
+      "nome": "nicolas andrade",
+      "email": "nicolas.a.rodrigues11@gmail.com",
+      "senha": "4575b70d71476963$38525e2c64b20260b3230a9f079a508aade7a476ff935f12cdb4d222ff302b4d",
+      "criado": "2026-10-23T21:51:31"
+    }
+  ],
+  "carros": [],
+  "recargas": [
+    {
+      "recibo": "380768",
+      "data": "23/10/2026, 21:51:57",
+      "carro": null,
+      "energia": 20,
+      "duracao_min": 56,
+      "custo": 29.0,
+      "estrategia": "rapido",
+      "pagamento": "Pix",
+      "economia": 0.0,
+      "kwh": {
+        "rapido": 20
+      },
+      "id": "99cac067",
+      "uid": "070190a1",
+      "criado": "2026-10-23T21:51:57"
+    }
+  ],
+  "tokens": {
+    "vI2UznOSUW3FMGZAMggDSAqbctHZsDW_": "070190a1"
+  }
+}
